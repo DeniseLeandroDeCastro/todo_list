@@ -12,6 +12,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -25,6 +26,8 @@ import com.denise.castro.todolist.domain.Todo
 import com.denise.castro.todolist.domain.todo1
 import com.denise.castro.todolist.domain.todo2
 import com.denise.castro.todolist.domain.todo3
+import com.denise.castro.todolist.navigation.AddEditRoute
+import com.denise.castro.todolist.ui.UiEvent
 import com.denise.castro.todolist.ui.components.TodoItem
 import com.denise.castro.todolist.ui.feature.addedit.AddEditViewModel
 import com.denise.castro.todolist.ui.theme.TodoListTheme
@@ -45,20 +48,38 @@ fun ListScreen(
 
     val todos by viewModel.todos.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collect { uiEvent ->
+            when(uiEvent) {
+                is UiEvent.Navigate<*> -> {
+                    when (uiEvent.route) {
+                        is AddEditRoute -> {
+                            navigateToAddEditScreen(uiEvent.route.id)
+                        }
+                    }
+                }
+                UiEvent.NavigateBack -> {}
+                is UiEvent.ShowSnackbar -> {}
+            }
+        }
+    }
+
     ListContent(
         todos = todos,
-        onAddItemClick = navigateToAddEditScreen
+        onEvent = viewModel::onEvent
     )
 }
 
 @Composable
 fun ListContent(
     todos: List<Todo>,
-    onAddItemClick: (id: Long?) -> Unit,
+    onEvent: (ListEvent) -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { onAddItemClick(null) }) {
+            FloatingActionButton(onClick = {
+                onEvent(ListEvent.AddEdit(null))
+            }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }
@@ -71,9 +92,15 @@ fun ListContent(
             itemsIndexed(todos) { index, todo ->
                 TodoItem(
                     todo = todo,
-                    onCompletedChange = {},
-                    onItemClick = {},
-                    onDeleteClick = {}
+                    onCompletedChange = {
+                        onEvent(ListEvent.CompleteChanged(todo.id, it))
+                    },
+                    onItemClick = {
+                        onEvent(ListEvent.AddEdit(todo.id))
+                    },
+                    onDeleteClick = {
+                        onEvent(ListEvent.Delete(todo.id))
+                    }
                 )
 
                 if(index < todos.lastIndex) {
@@ -94,7 +121,7 @@ private fun ListContentPreview() {
                 todo2,
                 todo3
             ),
-            onAddItemClick = {}
+            onEvent = {}
         )
     }
 }
