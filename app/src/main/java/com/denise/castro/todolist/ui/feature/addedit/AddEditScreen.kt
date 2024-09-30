@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.FloatingActionButton
@@ -44,10 +45,7 @@ fun AddEditScreen(
     }
     val title = viewModel.title
     val description = viewModel.description
-
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { uiEvent ->
@@ -62,15 +60,13 @@ fun AddEditScreen(
                 }
                 is UiEvent.Navigate<*> -> {}
             }
-
         }
     }
-
     AddEditContent(
         title = title,
         description = description,
         snackbarHostState = snackbarHostState,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
     )
 }
 
@@ -79,21 +75,15 @@ fun AddEditContent(
     title: String,
     description: String?,
     snackbarHostState: SnackbarHostState,
-    onEvent: (AddEditEvent) -> Unit
+    onEvent: (AddEditEvent) -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    onEvent(AddEditEvent.Save)
-                }
-            ) {
-                Icon(Icons.Default.Check, contentDescription = "Save")
-            }
+                onClick = { onEvent(AddEditEvent.Save) }
+            ) { Icon(Icons.Default.Check, contentDescription = "Save") }
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValue ->
         Column(
             modifier = Modifier
@@ -101,27 +91,25 @@ fun AddEditContent(
                 .padding(16.dp)
         ) {
             OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 value = title,
                 onValueChange = {
                     onEvent(AddEditEvent.TitleChanged(it))
                 },
-                placeholder = {
-                    Text(text = "Title")
-                }
+                label = { Text(text = "Título") },
+                placeholder = { Text(text = "Digite um título para a sua tarefa") },
+                shape = RoundedCornerShape(12.dp),
             )
-            Spacer(modifier = Modifier.height(8.dp))
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 value = description ?: "",
-                onValueChange = {
-                    onEvent(AddEditEvent.DescriptionChanged(it))
-                },
-                placeholder = {
-                    Text(text = "Description (optional)")
-                }
+                onValueChange = { onEvent(AddEditEvent.DescriptionChanged(it)) },
+                label = { Text(text = "Descrição") },
+                placeholder = { Text(text = "Digite uma descrição (opcional)") },
+                shape = RoundedCornerShape(12.dp)
             )
         }
     }
@@ -135,7 +123,7 @@ private fun AddEditContentPreview() {
             title = "",
             description = null,
             snackbarHostState = SnackbarHostState(),
-            onEvent = {}
+            onEvent = {},
         )
     }
 }
