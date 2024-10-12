@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -75,7 +77,7 @@ fun AddEditContent(
     title: String,
     description: String?,
     snackbarHostState: SnackbarHostState,
-    onEvent: (AddEditEvent) -> Unit,
+    onEvent: (AddEditEvent) -> Unit
 ) {
     Scaffold(
         floatingActionButton = {
@@ -96,20 +98,48 @@ fun AddEditContent(
                 onValueChange = {
                     onEvent(AddEditEvent.TitleChanged(it))
                 },
+                isError = title.isBlank() && description != null,
                 label = { Text(text = "Título") },
-                placeholder = { Text(text = "Digite um título para a sua tarefa") },
                 shape = RoundedCornerShape(12.dp),
+                leadingIcon = {
+                    if (title.isNullOrBlank() && description != null) {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = "Warning",
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Check",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                },
             )
+            if (title.isBlank() && description != null) {
+                Text(
+                    text = "O título não pode estar vazio!",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                )
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
+            Spacer(modifier = Modifier.height(12.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = description ?: "",
                 onValueChange = { onEvent(AddEditEvent.DescriptionChanged(it)) },
                 label = { Text(text = "Descrição") },
-                placeholder = { Text(text = "Digite uma descrição (opcional)") },
-                shape = RoundedCornerShape(12.dp)
+                shape = RoundedCornerShape(12.dp),
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "Check",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
             )
         }
     }
