@@ -13,8 +13,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,8 +32,8 @@ import com.denise.castro.todolist.domain.todo2
 import com.denise.castro.todolist.domain.todo3
 import com.denise.castro.todolist.navigation.AddEditRoute
 import com.denise.castro.todolist.ui.UiEvent
+import com.denise.castro.todolist.ui.components.DeleteDialog
 import com.denise.castro.todolist.ui.components.TodoItem
-import com.denise.castro.todolist.ui.feature.addedit.AddEditViewModel
 import com.denise.castro.todolist.ui.theme.TodoListTheme
 
 @Composable
@@ -66,7 +70,7 @@ fun ListScreen(
 
     ListContent(
         todos = todos,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
     )
 }
 
@@ -74,6 +78,7 @@ fun ListScreen(
 fun ListContent(
     todos: List<Todo>,
     onEvent: (ListEvent) -> Unit,
+
 ) {
     Scaffold(
         floatingActionButton = {
@@ -121,7 +126,7 @@ private fun ListContentPreview() {
                 todo2,
                 todo3
             ),
-            onEvent = {}
+            onEvent = {},
         )
     }
 }

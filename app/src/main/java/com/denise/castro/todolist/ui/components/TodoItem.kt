@@ -17,8 +17,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,8 +36,8 @@ fun TodoItem(
     todo: Todo,
     onCompletedChange: (Boolean) -> Unit,
     onItemClick: () -> Unit,
-    onDeleteClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onDeleteClick:  () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         onClick = onItemClick,
@@ -73,27 +75,32 @@ fun TodoItem(
                 Text(
                     text = todo.title,
                     style = MaterialTheme.typography.titleLarge,
-                    color = Color.LightGray
+                    color = Color.White
                 )
                 todo.description?.let {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = todo.description,
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color.LightGray
+                        color = Color.White
                     )
                 }
             }
+            val showDialog = remember { mutableStateOf(false) }
+            if (showDialog.value) {
+                DeleteDialog(
+                    title = "ATENÇÃO!",
+                    desc = "A ação não poderá ser desfeita. Deseja mesmo excluir a tarefa?",
+                    onDismiss = { showDialog.value = false },
+                    onDeleteClick = onDeleteClick
+                )
+            }
             Spacer(modifier = Modifier.width(8.dp))
             IconButton(
-                //onClick = onDeleteClick
-                onClick = {
-                    val showDialog = mutableStateOf(false)
-                    showDialog.value = true
-                }
+                onClick = { showDialog.value = true }
             ) {
                 Icon(
-                    imageVector = Icons.Default.Delete,
+                    imageVector = Icons.Filled.Delete,
                     contentDescription = "Ícone de Lixeira",
                     tint = MaterialTheme.colorScheme.error
                 )
@@ -110,7 +117,7 @@ private fun TodoItemPreview() {
             todo = todo1,
             onCompletedChange = {},
             onItemClick = {},
-            onDeleteClick = {}
+            onDeleteClick = {},
         )
     }
 }
@@ -123,7 +130,7 @@ private fun TodoItemCompletedPreview() {
             todo = todo2,
             onCompletedChange = {},
             onItemClick = {},
-            onDeleteClick = {}
+            onDeleteClick = {},
         )
     }
 }

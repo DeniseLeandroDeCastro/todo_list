@@ -20,6 +20,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.denise.castro.todolist.data.TodoDatabaseProvider
 import com.denise.castro.todolist.data.TodoRepositoryImpl
 import com.denise.castro.todolist.ui.UiEvent
+import com.denise.castro.todolist.ui.components.DeleteDialog
 import com.denise.castro.todolist.ui.theme.TodoListTheme
 
 @Composable
@@ -48,6 +50,8 @@ fun AddEditScreen(
     val title = viewModel.title
     val description = viewModel.description
     val snackbarHostState = remember { SnackbarHostState() }
+
+    val deleteDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect { uiEvent ->

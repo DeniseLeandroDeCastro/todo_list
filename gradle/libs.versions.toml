@@ -7,6 +7,11 @@ kotlin = "2.0.20"
 coreKtx = "1.13.1"
 activityCompose = "1.9.2"
 composeBom = "2024.09.02"
+
+#+------------------------------------------------------------+
+#| Lottie                                                     |
+#+------------------------------------------------------------+
+lottieCompose = "6.5.2"
 #+------------------------------------------------------------+
 #| Room                                                       |
 #+------------------------------------------------------------+
@@ -73,6 +78,12 @@ hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 #| Kotlix Serialization                                       |
 #+------------------------------------------------------------+
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+
+#+------------------------------------------------------------+
+#| Lottie                                                     |
+#+------------------------------------------------------------+
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
+
 #+------------------------------------------------------------+
 #| Tests                                                      |
 #+------------------------------------------------------------+

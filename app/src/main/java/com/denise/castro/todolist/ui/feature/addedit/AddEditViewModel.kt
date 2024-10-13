@@ -24,6 +24,7 @@ class AddEditViewModel(
         private set
 
     private val _uiEvent = Channel<UiEvent>()
+
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
