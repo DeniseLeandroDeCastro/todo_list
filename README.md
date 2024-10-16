@@ -2,8 +2,6 @@
 
 <img src="https://github.com/user-attachments/assets/195b7b30-7408-4022-be72-adb5bf4ff910" width="400" height="200"/>
 
-</div>
-
 ## Apresentação do aplicativo
 
 ### Tecnologias - recursos utilizados nesse aplicativo:
